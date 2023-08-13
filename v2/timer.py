@@ -77,41 +77,25 @@ def format_time(elapsed_time):
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}:{milliseconds:03d}"
 
 
+# Function to start the timer
 def start_timer():
     global elapsed_time, is_running
     is_running = True
-    # Disable the "Start" button
-    start_button.config(state=tk.DISABLED)
-    # Enable the "Stop" button
-    stop_button.config(state=tk.NORMAL)
     timer_tick()
+
 
 # Function to stop the timer
 def stop_timer():
     global is_running
     is_running = False
-    # Re-enable the "Start" button
-    start_button.config(state=tk.NORMAL)
-    # Disable the "Stop" button
-    stop_button.config(state=tk.DISABLED)
-    # Enable the "Reset" button if the timer isn't at 00:00:000
-    if elapsed_time != 0:
-        reset_button.config(state=tk.NORMAL)
+
 
 # Function to reset the timer
 def reset_timer():
     global elapsed_time, is_running
     if not is_running:
         elapsed_time = 0
-        # Re-enable the "Start" button
-        start_button.config(state=tk.NORMAL)
-        # Disable the "Stop" button
-        stop_button.config(state=tk.DISABLED)
-        # Disable the "Reset" button if the timer is already at 00:00:000
-        if elapsed_time == 0:
-            reset_button.config(state=tk.DISABLED)
-        else:
-            reset_button.config(state=tk.NORMAL)
+        is_running = False
         timer_label.config(text=format_time(elapsed_time))
 
 
@@ -197,6 +181,8 @@ selected_measurement.set("kilometer")
 recorded_entries = set()
 
 # Function to log out the user and reset timer-related variables
+
+
 def logout():
     global Logged_in_username, elapsed_time, is_running
     Logged_in_username = ""  # Clear the Logged_in_username
@@ -214,6 +200,7 @@ def log():
     # Open log.py using subprocess
     subprocess.call(["python", "log.py", Logged_in_username])
     return
+
 
 # Create a custom button for logging out
 log_out_button = customtkinter.CTkButton(
@@ -239,6 +226,8 @@ log_button = customtkinter.CTkButton(
 log_button.place(x=415, y=25)  # Place the log_out_button on the window
 
 # Function to change the measurement type (kilometer/meter) for distance
+
+
 def change_measurement_type(button_type):
     # Check the currently selected measurement type and the button_type
     # parameter to determine the action
@@ -362,9 +351,21 @@ def record_progress():
                 f"{Logged_in_username.strip()}={str(format_time(elapsed_time))}={set_distance}={current_timestamp}={current_date}\n")
 
 # Function to handle focus event on distance entry
+
+
 def distance_entry_focus():
     distance_entry.configure(
         validate="key", validatecommand=(validation, "%P"))
+
+# def update_battery_percentage():
+  #  battery = psutil.sensors_battery()
+   # percent = battery.percent
+   # battery_label.config(text=f"{percent}%")
+   # root.after(1000, update_battery_percentage)
+
+# battery_label = tk.Label(root, text=f"{percent}%", font=("Arial", 12))
+# battery_label.place(relx=0.9, y=25)
+
 
 distance_label_text = StringVar()
 distance_label_text.set("SET DISTANCE (CURRENT: KILOMETERS)")
@@ -434,8 +435,7 @@ stop_button = ttk.Button(outer_frame, text="Stop",
 stop_button.pack(side=tk.LEFT)
 
 reset_button = ttk.Button(outer_frame, text="Reset",
-                          width=10, command=reset_timer,
-                          state=tk.DISABLED)
+                          width=10, command=reset_timer)
 reset_button.pack(side=tk.LEFT, padx=10)
 
 error_message = ttk.Label(
@@ -461,5 +461,6 @@ save_progress_button = customtkinter.CTkButton(
          "bold"))
 save_progress_button.place(relx=0.5, y=500, anchor=tk.CENTER)
 
+# update_battery_percentage()
 
 root.mainloop()
